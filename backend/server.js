@@ -8,7 +8,17 @@ const app = express();
 const port = process.env.PORT || 3000; // Dynamic port for Render
 
 // Middleware
-app.use(cors()); // Allows requests from your frontend
+app.use(cors({
+  origin: [
+    'https://lexcompass.netlify.app',
+    'http://localhost:5500',
+    'http://localhost:3000',
+    'http://127.0.0.1:5500'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+})); // Enhanced CORS for Netlify and local development
 app.use(express.json());
 const upload = multer({ storage: multer.memoryStorage() }); // Store file in memory
 

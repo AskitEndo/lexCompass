@@ -1,14 +1,19 @@
 {
-  "name": "backend",
+  "name": "lexcompass-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "LexCompass AI Legal Assistant Backend",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["legal", "ai", "assistant", "gemini"],
+  "author": "AskitEndo",
   "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "type": "commonjs",
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
