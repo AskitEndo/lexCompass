@@ -1,8 +1,9 @@
 # ⚖️ LexCompass — From Legal Documents to Legal Decisions™
 
 ## 🎯 Challenge Selected
-**AI for Accessibility & Empowerment**
-*(Also fits under LegalTech / FinTech challenges)*
+
+**Generative AI for Demystifying Legal Documents**
+_(Also fits under LegalTech / FinTech challenges)_
 
 Legal documents are intimidating, complex, and often inaccessible to ordinary people. Most AI tools summarize — but they don't empower. We're solving legal literacy + decision-making + negotiation with an intent-aligned, anxiety-aware AI platform.
 
@@ -19,7 +20,7 @@ Users don't just read — they **navigate**: see outcomes, forecast risks, align
 ## 🔹 USP of the Solution
 
 - 🗺️ **Legal GPS Mode** → Converts contracts into outcome-based decision flows
-- 🎯 **Intent Alignment Engine** → Compares clauses vs. user goals  
+- 🎯 **Intent Alignment Engine** → Compares clauses vs. user goals
 - 🚨 **Risk Radar™** → AI-powered clause-level risk forecasting
 - 💼 **Clause Coach™** → Negotiation mentor with rewrite + copy-paste templates
 - 🧠 **Emotion Layer** → Anxiety-aware AI UX that adapts tone & visuals
@@ -32,6 +33,7 @@ Users don't just read — they **navigate**: see outcomes, forecast risks, align
 ## 🔍 How is LexCompass Different from Existing Solutions?
 
 ### 🆚 **vs. Traditional Legal AI Tools:**
+
 - **Beyond Summarization** → Provides actionable, intent-aligned decision maps
 - **Emotionally Intelligent** → Adapts explanations based on user anxiety and comfort
 - **Negotiation-Ready** → Suggests safer clause rewrites and templates
@@ -39,6 +41,7 @@ Users don't just read — they **navigate**: see outcomes, forecast risks, align
 - **Personalized Risk Assessment** → Context-aware risk scoring with visual indicators
 
 ### 🆚 **vs. Legal Document Platforms:**
+
 - **Real-time AI Analysis** → Instant risk identification and coaching
 - **Interactive Visualization** → Decision trees instead of static text
 - **User Intent Alignment** → Checks if contract matches personal goals
@@ -65,8 +68,9 @@ flowchart TD
 ```
 
 ### **Problem-Solution Flow:**
+
 1. 📖 **Extracts** obligations, options, deadlines, and risks from contracts
-2. 🗺️ **Builds interactive decision map**: "If I do X → Y happens"  
+2. 🗺️ **Builds interactive decision map**: "If I do X → Y happens"
 3. 🎯 **Checks** contract alignment with user's stated intent
 4. 🚨 **Flags** high-risk/unfair clauses with AI-driven risk scores
 5. 💡 **Suggests** improved clauses for safer negotiation
@@ -80,8 +84,9 @@ flowchart TD
 > **🧭 LexCompass is the first platform to combine legal AI, risk analysis, negotiation coaching, and emotional intelligence into a single, accessible tool. It empowers users to not just understand, but confidently act on legal documents.**
 
 ### **🌟 Key Differentiators:**
+
 - **🧠 AI-Powered Legal GPS** - Navigate documents like a map, not a book
-- **🎯 Intent-Aligned Analysis** - Personalized to your specific goals  
+- **🎯 Intent-Aligned Analysis** - Personalized to your specific goals
 - **🚨 Predictive Risk Assessment** - 1-10 scoring with color-coded warnings
 - **💼 Active Clause Coaching** - AI suggests safer alternatives with explanations
 - **🎨 Anxiety-Aware Design** - Reduces legal intimidation through UX psychology
@@ -92,8 +97,9 @@ flowchart TD
 ## 📊 MVP (Minimum Viable Product) Features
 
 ### ✅ **Core Features Implemented:**
+
 1. **📄 Document Upload & Analysis** - AI-powered parsing of legal documents
-2. **🗺️ Interactive Decision Map** - Visual network representation of document structure  
+2. **🗺️ Interactive Decision Map** - Visual network representation of document structure
 3. **🚨 Risk Radar™** - Color-coded risk assessment with 1-10 scoring
 4. **💼 Clause Coach™** - AI suggestions for safer clause alternatives
 5. **📱 Material 3 UI** - Professional legal office aesthetic with real-time clock
@@ -118,8 +124,9 @@ A: We don't just summarize—we visualize, assess risk numerically, provide coac
 ## 🎨 List of Features Offered by the Solution
 
 ### 🔧 **Technical Features:**
+
 - **🤖 AI Document Analysis** (Google Gemini API integration)
-- **🗺️ Interactive Decision Maps** (vis.js network visualization)  
+- **🗺️ Interactive Decision Maps** (vis.js network visualization)
 - **🚨 Risk Scoring System** (1-10 scale with color coding)
 - **💼 Clause Coaching Engine** (AI-powered suggestions)
 - **📱 Material 3 Design** (Professional legal office aesthetic)
@@ -128,7 +135,8 @@ A: We don't just summarize—we visualize, assess risk numerically, provide coac
 - **🔔 Smart Notifications** (Material toast notifications)
 
 ### 👥 **User Experience Features:**
-- **🎯 File Upload with Visual Feedback** 
+
+- **🎯 File Upload with Visual Feedback**
 - **⚡ Real-time Loading States**
 - **📊 Color-coded Risk Visualization**
 - **💡 Copy-to-Clipboard Functionality**
@@ -143,22 +151,22 @@ A: We don't just summarize—we visualize, assess risk numerically, provide coac
 sequenceDiagram
     participant U as 👤 User
     participant F as 🖥️ Frontend
-    participant B as ⚙️ Backend  
+    participant B as ⚙️ Backend
     participant AI as 🤖 Gemini AI
-    
+
     U->>F: 📄 Upload Legal Document
     F->>F: ✅ Validate File Type
     F->>B: 📤 Send Document for Analysis
     B->>AI: 🧠 Request Legal Analysis
     AI->>AI: 🔍 Parse Document Structure
-    AI->>AI: ⚠️ Identify Risk Areas  
+    AI->>AI: ⚠️ Identify Risk Areas
     AI->>AI: 📊 Generate Risk Scores
     AI->>B: 📋 Return Analysis Results
     B->>F: 📊 Send Structured Data
     F->>F: 🗺️ Create Decision Map Visualization
     F->>F: 🚨 Render Risk Cards with Scoring
     F->>U: ✨ Display Interactive Results
-    
+
     opt Clause Coaching
         U->>F: 💼 Request Safer Clause
         F->>B: 📝 Send Clause for Coaching
@@ -177,21 +185,21 @@ sequenceDiagram
 graph LR
     User((👤 User))
     System[🧭 LexCompass System]
-    
+
     User -.-> |📄 Upload Document| UC1[Upload Legal Document]
-    User -.-> |🔍 Analyze Risks| UC2[View Risk Assessment]  
+    User -.-> |🔍 Analyze Risks| UC2[View Risk Assessment]
     User -.-> |🗺️ Navigate Map| UC3[Explore Decision Map]
     User -.-> |💼 Get Coaching| UC4[Request Clause Coaching]
     User -.-> |📋 Export Results| UC5[Export Analysis]
     User -.-> |📱 Share Results| UC6[Share Analysis]
-    
+
     UC1 --> System
-    UC2 --> System  
+    UC2 --> System
     UC3 --> System
     UC4 --> System
     UC5 --> System
     UC6 --> System
-    
+
     System --> |🤖 AI Analysis| Backend[⚙️ Backend Services]
     System --> |📊 Visualization| Frontend[🖥️ Frontend Interface]
     Backend --> |🧠 NLP Processing| AI[🤖 Gemini AI]
@@ -208,36 +216,36 @@ graph TB
         VIZ[📊 vis.js Visualization]
         CLOCK[⏰ Analog Clock Widget]
     end
-    
-    subgraph "⚙️ Backend Layer"  
+
+    subgraph "⚙️ Backend Layer"
         API[🔌 Express.js API]
         UPLOAD[📤 Multer File Upload]
         VALIDATION[✅ Input Validation]
     end
-    
+
     subgraph "🤖 AI/ML Layer"
         GEMINI[🧠 Google Gemini AI]
         NLP[📝 Text Processing]
         RISK[⚠️ Risk Assessment]
         COACH[💼 Clause Coaching]
     end
-    
+
     subgraph "💾 Data Layer"
         SAMPLES[📄 Legal Document Samples]
         EXPORT[📋 JSON Export]
     end
-    
+
     UI --> API
     VIZ --> API
     API --> UPLOAD
     API --> VALIDATION
     API --> GEMINI
     GEMINI --> NLP
-    GEMINI --> RISK  
+    GEMINI --> RISK
     GEMINI --> COACH
     API --> EXPORT
     SAMPLES --> API
-    
+
     style UI fill:#1565C0,stroke:#fff,color:#fff
     style API fill:#388E3C,stroke:#fff,color:#fff
     style GEMINI fill:#F57C00,stroke:#fff,color:#fff
@@ -249,8 +257,9 @@ graph TB
 ## 🛠️ Technologies Used in the Solution
 
 ### 🌐 **Frontend Technologies:**
+
 - **⚡ HTML5 + CSS3** - Modern web standards
-- **🎨 Tailwind CSS** - Utility-first styling framework  
+- **🎨 Tailwind CSS** - Utility-first styling framework
 - **📱 Material 3 Design** - Google's latest design system
 - **📊 vis.js** - Network visualization library for decision maps
 - **⏰ Custom Analog Clock** - Vector-based time widget
@@ -258,6 +267,7 @@ graph TB
 - **🎯 Vanilla JavaScript** - No heavy frameworks for performance
 
 ### ⚙️ **Backend Technologies:**
+
 - **🟢 Node.js** - JavaScript runtime environment
 - **🚀 Express.js** - Minimal web application framework
 - **📤 Multer** - File upload middleware
@@ -265,6 +275,7 @@ graph TB
 - **🔒 dotenv** - Environment variable management
 
 ### 🤖 **AI/ML Technologies:**
+
 - **🧠 Google Gemini 1.5 Flash** - Large language model
 - **📚 @google/generative-ai** - Official Google AI SDK
 - **📝 Natural Language Processing** - Text analysis and extraction
@@ -272,6 +283,7 @@ graph TB
 - **💼 Prompt Engineering** - Optimized legal analysis prompts
 
 ### 🎨 **Design & UX:**
+
 - **📐 Material 3 Color Scheme** - Consistent design tokens
 - **🎨 CSS Custom Properties** - Dynamic theming
 - **⚡ CSS Transitions** - Smooth animations
@@ -279,6 +291,7 @@ graph TB
 - **♿ Accessibility Features** - Screen reader friendly
 
 ### 🔧 **Development Tools:**
+
 - **📝 VS Code** - Code editor with extensions
 - **🌿 Git** - Version control
 - **📦 npm** - Package management
@@ -293,13 +306,14 @@ graph TB
 Our **LexCompass prototype** is a fully functional web application that showcases the core vision of transforming legal documents into interactive, visual decision-making tools. Built in just a few hours for hackathon submission, it demonstrates:
 
 1. **📄 Document Upload & AI Analysis** - Upload .txt legal documents for instant AI processing
-2. **🗺️ Interactive Decision Maps** - Visual network diagrams showing document structure and relationships  
+2. **🗺️ Interactive Decision Maps** - Visual network diagrams showing document structure and relationships
 3. **🚨 Risk Radar™ with Scoring** - Color-coded risk assessment (1-10 scale) with detailed explanations
 4. **💼 AI Clause Coaching** - Get safer clause alternatives with explanations of legal improvements
 5. **📱 Professional UI** - Material 3 design with legal office aesthetic and working analog clock
 6. **📋 Export Functionality** - Download complete analysis results for sharing
 
 ### 🎪 **Live Demo Experience:**
+
 - **Upload** sample documents (employment contracts, rental leases, loan agreements)
 - **Visualize** document structure as an interactive network graph
 - **Identify** high-risk clauses with AI-powered scoring (🔴 Critical, 🟠 High, 🟡 Medium, 🟢 Low)
@@ -307,12 +321,13 @@ Our **LexCompass prototype** is a fully functional web application that showcase
 - **Export** analysis results for further review
 
 ### 🏗️ **Technical Implementation:**
+
 - **Frontend:** Material 3 design with Tailwind CSS, vis.js visualizations, analog clock widget
-- **Backend:** Node.js + Express with Google Gemini AI integration  
+- **Backend:** Node.js + Express with Google Gemini AI integration
 - **AI Engine:** Advanced prompt engineering for legal document analysis and risk assessment
 - **Sample Data:** Diverse legal documents including problematic, semi-legal, and fair agreements
 
-**🔗 Prototype Link:** *[To be deployed on GitHub Pages or similar platform]*
+**🔗 Prototype Link:** _[To be deployed on GitHub Pages or similar platform]_
 
 ---
 
@@ -322,4 +337,4 @@ Our **LexCompass prototype** is a fully functional web application that showcase
 
 ---
 
-*📧 Built with ❤️ for the hackathon - Making legal literacy accessible to everyone through AI innovation*
+_📧 Built with ❤️ for the hackathon - Making legal literacy accessible to everyone through AI innovation_
