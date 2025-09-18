@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>⚖️ LexCompass - AI Legal Assistant</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+    <style>
+      /* Legal Office Theme */
+      body {
+        background: linear-gradient(135deg, #f8f6f0 0%, #f1ede3 100%);
+        font-family: "Roboto", serif;
+      }
+
+      .office-card {
+        background: #fefdfb;
+        border: 1px solid #e8e1d4;
+        box-shadow: 0 8px 32px rgba(139, 69, 19, 0.1);
+      }
+
+      .legal-gold {
+        color: #b8860b;
+      }
+
+      .legal-brown {
+        color: #8b4513;
+      }
+
+      .legal-navy {
+        color: #1e3a8a;
+      }
+
+      /* Risk Assessment Colors */
+      .risk-critical {
+        background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+        color: white;
+        border-left: 4px solid #7f1d1d;
+      }
+      .risk-high {
+        background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+        color: white;
+        border-left: 4px solid #9a3412;
+      }
+      .risk-medium {
+        background: linear-gradient(135deg, #d97706 0%, #a16207 100%);
+        color: white;
+        border-left: 4px solid #78350f;
+      }
+      .risk-low {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        color: white;
+        border-left: 4px solid #065f46;
+      }
+
+      /* Analog Clock Styles */
+      .clock-container {
+        width: 100px;
+        height: 100px;
+        border: 3px solid #b8860b;
+        border-radius: 50%;
+        position: relative;
+        background: #fefdfb;
+        box-shadow: 0 4px 12px rgba(184, 134, 11, 0.2);
+      }
+
+      .clock-center {
+        width: 8px;
+        height: 8px;
+        background: #8b4513;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+      }
+
+      .clock-hand {
+        position: absolute;
+        background: #8b4513;
+        transform-origin: bottom center;
+        border-radius: 2px;
+      }
+
+      .hour-hand {
+        width: 3px;
+        height: 25px;
+        top: 25%;
+        left: 50%;
+        margin-left: -1.5px;
+      }
+
+      .minute-hand {
+        width: 2px;
+        height: 35px;
+        top: 15%;
+        left: 50%;
+        margin-left: -1px;
+      }
+
+      .second-hand {
+        width: 1px;
+        height: 40px;
+        top: 10%;
+        left: 50%;
+        margin-left: -0.5px;
+        background: #dc2626;
+      }
+
+      .clock-numbers {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        font-size: 10px;
+        font-weight: bold;
+        color: #8b4513;
+      }
+
+      /* Enhanced Material Buttons */
+      .material-button {
+        transition: all 0.3s ease;
+        font-weight: 500;
+        letter-spacing: 0.025em;
+      }
+
+      .material-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+      }
+
+      .btn-legal-primary {
+        background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+        color: white;
+        border: none;
+      }
+
+      .btn-legal-secondary {
+        background: linear-gradient(135deg, #8b4513 0%, #a16207 100%);
+        color: white;
+        border: none;
+      }
+
+      /* Decision Map Enhancements */
+      #decision-map {
+        height: 500px;
+        border: 2px solid #e8e1d4;
+        border-radius: 16px;
+        background: #ffffff;
+        box-shadow: inset 0 2px 8px rgba(139, 69, 19, 0.1);
+        position: relative;
+      }
+
+      /* Vis.js Network Styling */
+      .vis-network {
+        outline: none;
+      }
+
+      .vis-network canvas {
+        background-color: #ffffff !important;
+      }
+
+      /* File Upload Enhanced Styling */
+      .file-upload-area {
+        transition: all 0.3s ease;
+      }
+
+      .file-upload-area.has-file {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        border-color: #059669;
+        color: white;
+      }
+
+      .file-upload-area.has-file .material-icons {
+        color: white !important;
+      }
+
+      .file-upload-area.has-file p {
+        color: white !important;
+        font-weight: 600;
+      }
+
+      .file-selected-text {
+        color: white !important;
+        font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Loading Animation */
+      .loading-dots::after {
+        content: "...";
+        animation: dots 1.5s steps(4, end) infinite;
+      }
+
+      @keyframes dots {
+        0%,
+        20% {
+          content: ".";
+        }
+        40% {
+          content: "..";
+        }
+        60% {
+          content: "...";
+        }
+        80%,
+        100% {
+          content: "";
+        }
+      }
+
+      /* Text Contrast Improvements */
+      .text-contrast {
+        color: #374151;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .text-legal-heading {
+        color: #1e3a8a;
+        font-weight: 600;
+        letter-spacing: -0.025em;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen">
+    <!-- Navigation Header -->
+    <nav
+      class="office-card shadow-xl border-b-2 border-yellow-600 sticky top-0 z-50"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-20">
+          <!-- Logo & Brand -->
+          <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-3">
+              <span class="material-icons text-4xl legal-gold">balance</span>
+              <div>
+                <h1 class="text-2xl font-bold legal-navy">LexCompass</h1>
+                <p class="text-xs legal-brown font-medium">
+                  AI Legal Assistant
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Real-time Clock Widget -->
+          <div class="flex items-center space-x-4">
+            <div class="text-right hidden sm:block">
+              <div
+                id="digital-time"
+                class="text-lg font-semibold legal-navy"
+              ></div>
+              <div id="digital-date" class="text-xs legal-brown"></div>
+            </div>
+            <div class="clock-container">
+              <div class="clock-numbers">
+                <div
+                  style="
+                    position: absolute;
+                    top: 5px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    font-size: 8px;
+                  "
+                >
+                  12
+                </div>
+                <div
+                  style="
+                    position: absolute;
+                    top: 50%;
+                    right: 5px;
+                    transform: translateY(-50%);
+                    font-size: 8px;
+                  "
+                >
+                  3
+                </div>
+                <div
+                  style="
+                    position: absolute;
+                    bottom: 5px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    font-size: 8px;
+                  "
+                >
+                  6
+                </div>
+                <div
+                  style="
+                    position: absolute;
+                    top: 50%;
+                    left: 5px;
+                    transform: translateY(-50%);
+                    font-size: 8px;
+                  "
+                >
+                  9
+                </div>
+              </div>
+              <div class="clock-hand hour-hand" id="hour-hand"></div>
+              <div class="clock-hand minute-hand" id="minute-hand"></div>
+              <div class="clock-hand second-hand" id="second-hand"></div>
+              <div class="clock-center"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Hero Section -->
+      <div class="text-center mb-12">
+        <div class="office-card rounded-3xl p-8 mb-8">
+          <h2 class="text-4xl font-bold text-legal-heading mb-4">
+            From Legal Documents to Legal Decisions™
+          </h2>
+          <p class="text-xl text-contrast mb-6 max-w-3xl mx-auto">
+            Transform complex legal contracts into interactive decision maps
+            with AI-powered risk analysis and clause coaching.
+          </p>
+          <div class="flex flex-wrap justify-center gap-6 text-sm mt-6">
+            <span
+              class="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-blue-100 rounded-full"
+            >
+              <span class="material-icons text-blue-600">visibility</span>
+              <span class="text-contrast font-medium"
+                >Visual Decision Maps</span
+              >
+            </span>
+            <span
+              class="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-orange-50 to-orange-100 rounded-full"
+            >
+              <span class="material-icons text-orange-600">warning</span>
+              <span class="text-contrast font-medium">Risk Assessment</span>
+            </span>
+            <span
+              class="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-amber-50 to-amber-100 rounded-full"
+            >
+              <span class="material-icons text-amber-700">school</span>
+              <span class="text-contrast font-medium">AI Clause Coaching</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload Section -->
+      <div class="grid lg:grid-cols-2 gap-8 mb-8">
+        <!-- File Upload Card -->
+        <div class="office-card rounded-3xl p-6">
+          <h3
+            class="text-2xl font-semibold text-legal-heading mb-4 flex items-center"
+          >
+            <span class="material-icons mr-3 legal-gold">upload_file</span>
+            Upload Legal Document
+          </h3>
+
+          <div class="space-y-4">
+            <div
+              id="uploadArea"
+              class="file-upload-area border-2 border-dashed border-amber-300 rounded-2xl p-8 text-center hover:border-amber-500 transition-colors bg-amber-50"
+            >
+              <input
+                type="file"
+                id="documentUpload"
+                accept=".txt,.pdf,.doc,.docx"
+                class="hidden"
+              />
+              <label for="documentUpload" class="cursor-pointer">
+                <span class="material-icons text-6xl text-amber-600 mb-4 block"
+                  >description</span
+                >
+                <p
+                  id="uploadText"
+                  class="text-lg font-medium text-contrast mb-2"
+                >
+                  Choose a legal document
+                </p>
+                <p id="uploadSubtext" class="text-sm legal-brown">
+                  Supports .txt, .pdf, .doc, .docx files
+                </p>
+              </label>
+            </div>
+
+            <button
+              id="analyzeBtn"
+              class="material-button btn-legal-primary w-full text-lg px-6 py-3 rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled
+            >
+              <span class="material-icons mr-2">psychology</span>
+              Analyze Document
+            </button>
+          </div>
+
+          <!-- Sample Documents -->
+          <div
+            class="mt-6 p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl border border-amber-200"
+          >
+            <h4 class="font-semibold text-contrast mb-3 flex items-center">
+              <span class="material-icons mr-2 legal-brown">folder</span>
+              Try Sample Documents
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <button
+                class="sample-doc p-3 text-left office-card rounded-xl hover:shadow-lg transition-all text-sm"
+                data-file="employment-contract.txt"
+              >
+                <span class="legal-gold">📄</span>
+                <span class="text-contrast">Employment Contract</span>
+              </button>
+              <button
+                class="sample-doc p-3 text-left office-card rounded-xl hover:shadow-lg transition-all text-sm"
+                data-file="rental-lease.txt"
+              >
+                <span class="legal-gold">🏠</span>
+                <span class="text-contrast">Rental Lease</span>
+              </button>
+              <button
+                class="sample-doc p-3 text-left office-card rounded-xl hover:shadow-lg transition-all text-sm"
+                data-file="loan-agreement.txt"
+              >
+                <span class="legal-gold">💰</span>
+                <span class="text-contrast">Loan Agreement</span>
+              </button>
+              <button
+                class="sample-doc p-3 text-left office-card rounded-xl hover:shadow-lg transition-all text-sm"
+                data-file="freelance-contract.txt"
+              >
+                <span class="legal-gold">💼</span>
+                <span class="text-contrast">Freelance Contract</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Analysis Info Card -->
+        <div class="office-card rounded-3xl p-6">
+          <h3
+            class="text-2xl font-semibold text-legal-heading mb-4 flex items-center"
+          >
+            <span class="material-icons mr-3 legal-gold">insights</span>
+            What You'll Get
+          </h3>
+
+          <div class="space-y-4">
+            <div
+              class="flex items-start space-x-3 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200"
+            >
+              <span class="material-icons text-blue-600 mt-1"
+                >account_tree</span
+              >
+              <div>
+                <h4 class="font-semibold text-contrast">
+                  Interactive Decision Map
+                </h4>
+                <p class="text-sm legal-brown">
+                  Visual flowchart showing legal obligations and choices
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="flex items-start space-x-3 p-4 bg-gradient-to-r from-orange-50 to-red-50 rounded-xl border border-orange-200"
+            >
+              <span class="material-icons text-orange-600 mt-1">warning</span>
+              <div>
+                <h4 class="font-semibold text-contrast">Risk Assessment</h4>
+                <p class="text-sm legal-brown">
+                  1-10 risk scores with color-coded warnings
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="flex items-start space-x-3 p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl border border-amber-200"
+            >
+              <span class="material-icons text-amber-700 mt-1">psychology</span>
+              <div>
+                <h4 class="font-semibold text-contrast">AI Clause Coaching</h4>
+                <p class="text-sm legal-brown">
+                  Suggestions for safer alternative clauses
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="flex items-start space-x-3 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200"
+            >
+              <span class="material-icons text-green-600 mt-1">download</span>
+              <div>
+                <h4 class="font-semibold text-contrast">Export Results</h4>
+                <p class="text-sm legal-brown">
+                  Download analysis as JSON for sharing
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div id="loader" class="hidden">
+        <div class="office-card rounded-3xl p-8 text-center">
+          <div
+            class="animate-spin w-16 h-16 border-4 border-amber-600 border-t-transparent rounded-full mx-auto mb-4"
+          ></div>
+          <h3 class="text-xl font-semibold text-legal-heading mb-2">
+            Analyzing Your Document
+          </h3>
+          <p class="text-contrast">
+            AI is processing your legal document<span
+              class="loading-dots"
+            ></span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Results Section -->
+      <div id="results" class="hidden space-y-8">
+        <!-- Document Summary -->
+        <div class="office-card rounded-3xl p-6">
+          <h3
+            class="text-2xl font-semibold text-legal-heading mb-4 flex items-center"
+          >
+            <span class="material-icons mr-3 legal-gold">summarize</span>
+            Document Analysis Summary
+          </h3>
+          <div
+            id="documentSummary"
+            class="text-contrast prose max-w-none"
+          ></div>
+        </div>
+
+        <!-- Visual Decision Map -->
+        <div class="office-card rounded-3xl p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h3
+              class="text-2xl font-semibold text-legal-heading flex items-center"
+            >
+              <span class="material-icons mr-3 legal-gold">account_tree</span>
+              Interactive Decision Map
+            </h3>
+            <button
+              id="resetMapBtn"
+              class="material-button btn-legal-secondary px-4 py-2 rounded-full"
+            >
+              <span class="material-icons mr-2">refresh</span>
+              Reset View
+            </button>
+          </div>
+          <div id="decision-map"></div>
+          <div id="decisionMapViz" class="mt-4"></div>
+          <ul id="decisionMap" class="space-y-2 mt-4"></ul>
+          <p class="text-sm legal-brown mt-3">
+            💡 <strong>Tip:</strong> Click and drag nodes to explore the
+            document structure. Hover for details.
+          </p>
+        </div>
+
+        <!-- Risk Analysis -->
+        <div class="office-card rounded-3xl p-6">
+          <h3
+            class="text-2xl font-semibold text-legal-heading mb-4 flex items-center"
+          >
+            <span class="material-icons mr-3 text-orange-600">warning</span>
+            Risk Assessment
+          </h3>
+          <div
+            id="riskRadar"
+            class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"
+          ></div>
+        </div>
+
+        <!-- AI Coaching -->
+        <div id="coachSection" class="office-card rounded-3xl p-6 hidden">
+          <h3
+            class="text-2xl font-semibold text-legal-heading mb-4 flex items-center"
+          >
+            <span class="material-icons mr-3 text-amber-700">school</span>
+            AI Clause Coaching
+          </h3>
+          <div id="coachResults" class="space-y-4"></div>
+        </div>
+
+        <!-- Export Section -->
+        <div class="office-card rounded-3xl p-6">
+          <h3
+            class="text-2xl font-semibold text-legal-heading mb-4 flex items-center"
+          >
+            <span class="material-icons mr-3 text-green-600">download</span>
+            Export Analysis
+          </h3>
+          <div class="flex flex-wrap gap-4">
+            <button
+              id="exportJsonBtn"
+              class="material-button btn-legal-secondary px-6 py-3 rounded-full"
+            >
+              <span class="material-icons mr-2">code</span>
+              Export as JSON
+            </button>
+            <button
+              id="shareBtn"
+              class="material-button bg-green-600 text-white px-6 py-3 rounded-full hover:bg-green-700"
+            >
+              <span class="material-icons mr-2">share</span>
+              Copy Share Link
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer
+      class="bg-gradient-to-r from-amber-900 to-yellow-900 text-white py-8 mt-16"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="flex justify-center items-center space-x-3 mb-4">
+          <span class="material-icons text-3xl text-amber-300">balance</span>
+          <h3 class="text-xl font-bold">LexCompass</h3>
+        </div>
+        <p class="text-amber-200 mb-4">
+          Making legal literacy accessible through AI innovation
+        </p>
+        <p class="text-sm text-amber-300">
+          Built with ❤️ for the hackathon - Empowering legal decisions worldwide
+        </p>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+
+    <script>
+      // Analog Clock Implementation
+      function updateClock() {
+        const now = new Date();
+        const hours = now.getHours() % 12;
+        const minutes = now.getMinutes();
+        const seconds = now.getSeconds();
+
+        // Calculate angles
+        const hourAngle = hours * 30 + minutes * 0.5;
+        const minuteAngle = minutes * 6;
+        const secondAngle = seconds * 6;
+
+        // Update hands
+        const hourHand = document.getElementById("hour-hand");
+        const minuteHand = document.getElementById("minute-hand");
+        const secondHand = document.getElementById("second-hand");
+
+        if (hourHand) hourHand.style.transform = `rotate(${hourAngle}deg)`;
+        if (minuteHand)
+          minuteHand.style.transform = `rotate(${minuteAngle}deg)`;
+        if (secondHand)
+          secondHand.style.transform = `rotate(${secondAngle}deg)`;
+
+        // Update digital time
+        const timeOptions = {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true,
+        };
+
+        const dateOptions = {
+          weekday: "short",
+          month: "short",
+          day: "numeric",
+        };
+
+        const digitalTime = document.getElementById("digital-time");
+        const digitalDate = document.getElementById("digital-date");
+
+        if (digitalTime)
+          digitalTime.textContent = now.toLocaleTimeString(
+            "en-US",
+            timeOptions
+          );
+        if (digitalDate)
+          digitalDate.textContent = now.toLocaleDateString(
+            "en-US",
+            dateOptions
+          );
+      }
+
+      // Update clock every second
+      setInterval(updateClock, 1000);
+      updateClock(); // Initial call
+
+      // Enhanced File Upload Handler
+      document.addEventListener("DOMContentLoaded", function () {
+        const fileInput = document.getElementById("documentUpload");
+        const uploadArea = document.getElementById("uploadArea");
+        const uploadText = document.getElementById("uploadText");
+        const uploadSubtext = document.getElementById("uploadSubtext");
+        const uploadIcon = uploadArea.querySelector(".material-icons");
+
+        if (fileInput) {
+          fileInput.addEventListener("change", function (e) {
+            const file = e.target.files[0];
+
+            if (file) {
+              // Change to success state
+              uploadArea.classList.add("has-file");
+              uploadIcon.textContent = "check_circle";
+              uploadText.textContent = `📄 ${file.name}`;
+              uploadText.classList.add("file-selected-text");
+              uploadSubtext.textContent = "File ready for analysis";
+              uploadSubtext.classList.add("file-selected-text");
+
+              // Enable analyze button
+              const analyzeBtn = document.getElementById("analyzeBtn");
+              if (analyzeBtn) {
+                analyzeBtn.disabled = false;
+                analyzeBtn.classList.remove("opacity-50", "cursor-not-allowed");
+              }
+            } else {
+              // Reset to default state
+              uploadArea.classList.remove("has-file");
+              uploadIcon.textContent = "description";
+              uploadText.textContent = "Choose a legal document";
+              uploadText.classList.remove("file-selected-text");
+              uploadSubtext.textContent =
+                "Supports .txt, .pdf, .doc, .docx files";
+              uploadSubtext.classList.remove("file-selected-text");
+
+              // Disable analyze button
+              const analyzeBtn = document.getElementById("analyzeBtn");
+              if (analyzeBtn) {
+                analyzeBtn.disabled = true;
+                analyzeBtn.classList.add("opacity-50", "cursor-not-allowed");
+              }
+            }
+          });
+        }
+      });
+
+      // Decision Map Initialization
+      function createDecisionMap() {
+        const container = document.getElementById("decision-map");
+
+        if (!container) {
+          console.error("Decision map container not found");
+          return;
+        }
+
+        // Sample legal decision network data
+        const nodes = new vis.DataSet([
+          {
+            id: 1,
+            label: "Contract Review\n📄",
+            level: 0,
+            color: {
+              background: "#1e3a8a",
+              border: "#1e40af",
+              font: { color: "white" },
+            },
+          },
+          {
+            id: 2,
+            label: "Risk Assessment\n⚠️",
+            level: 1,
+            color: {
+              background: "#dc2626",
+              border: "#991b1b",
+              font: { color: "white" },
+            },
+          },
+          {
+            id: 3,
+            label: "Compliance Check\n✅",
+            level: 1,
+            color: {
+              background: "#059669",
+              border: "#047857",
+              font: { color: "white" },
+            },
+          },
+          {
+            id: 4,
+            label: "Legal Obligations\n⚖️",
+            level: 2,
+            color: {
+              background: "#8b4513",
+              border: "#a16207",
+              font: { color: "white" },
+            },
+          },
+          {
+            id: 5,
+            label: "Financial Terms\n💰",
+            level: 2,
+            color: {
+              background: "#ea580c",
+              border: "#c2410c",
+              font: { color: "white" },
+            },
+          },
+          {
+            id: 6,
+            label: "Termination Clause\n🚪",
+            level: 2,
+            color: {
+              background: "#7c2d12",
+              border: "#92400e",
+              font: { color: "white" },
+            },
+          },
+          {
+            id: 7,
+            label: "Recommendations\n💡",
+            level: 3,
+            color: {
+              background: "#b8860b",
+              border: "#a16207",
+              font: { color: "white" },
+            },
+          },
+        ]);
+
+        const edges = new vis.DataSet([
+          {
+            from: 1,
+            to: 2,
+            label: "Analyze",
+            arrows: "to",
+            color: { color: "#64748b" },
+          },
+          {
+            from: 1,
+            to: 3,
+            label: "Verify",
+            arrows: "to",
+            color: { color: "#64748b" },
+          },
+          {
+            from: 2,
+            to: 4,
+            label: "High Risk",
+            arrows: "to",
+            color: { color: "#dc2626" },
+          },
+          {
+            from: 2,
+            to: 5,
+            label: "Medium Risk",
+            arrows: "to",
+            color: { color: "#ea580c" },
+          },
+          {
+            from: 3,
+            to: 6,
+            label: "Compliant",
+            arrows: "to",
+            color: { color: "#059669" },
+          },
+          {
+            from: 4,
+            to: 7,
+            label: "Review",
+            arrows: "to",
+            color: { color: "#64748b" },
+          },
+          {
+            from: 5,
+            to: 7,
+            label: "Review",
+            arrows: "to",
+            color: { color: "#64748b" },
+          },
+          {
+            from: 6,
+            to: 7,
+            label: "Review",
+            arrows: "to",
+            color: { color: "#64748b" },
+          },
+        ]);
+
+        const data = { nodes: nodes, edges: edges };
+
+        const options = {
+          layout: {
+            hierarchical: {
+              direction: "UD",
+              sortMethod: "directed",
+              levelSeparation: 150,
+              nodeSpacing: 200,
+              parentCentralization: true,
+              blockShifting: true,
+              edgeMinimization: true,
+            },
+          },
+          physics: {
+            enabled: false,
+          },
+          interaction: {
+            dragNodes: true,
+            dragView: true,
+            zoomView: true,
+            selectConnectedEdges: false,
+          },
+          edges: {
+            arrows: {
+              to: { enabled: true, scaleFactor: 1.2 },
+            },
+            font: {
+              size: 12,
+              color: "#374151",
+              strokeWidth: 2,
+              strokeColor: "#ffffff",
+            },
+            smooth: {
+              type: "cubicBezier",
+              forceDirection: "vertical",
+              roundness: 0.4,
+            },
+          },
+          nodes: {
+            shape: "box",
+            margin: 10,
+            widthConstraint: {
+              minimum: 120,
+              maximum: 150,
+            },
+            heightConstraint: {
+              minimum: 60,
+            },
+            font: {
+              size: 14,
+              face: "Roboto",
+              multi: true,
+            },
+            borderWidth: 2,
+            shadow: {
+              enabled: true,
+              color: "rgba(0,0,0,0.2)",
+              size: 10,
+              x: 2,
+              y: 2,
+            },
+          },
+        };
+
+        try {
+          const network = new vis.Network(container, data, options);
+
+          // Add click event handler
+          network.on("click", function (params) {
+            if (params.nodes.length > 0) {
+              const nodeId = params.nodes[0];
+              const node = nodes.get(nodeId);
+              console.log("Clicked node:", node.label);
+
+              // You can add custom actions here for each node
+              showNodeDetails(node);
+            }
+          });
+
+          console.log("Decision map initialized successfully");
+        } catch (error) {
+          console.error("Error creating decision map:", error);
+          container.innerHTML =
+            '<div class="p-8 text-center text-gray-500">Error loading decision map. Please refresh the page.</div>';
+        }
+      }
+
+      // Show node details function
+      function showNodeDetails(node) {
+        const detailsDiv = document.createElement("div");
+        detailsDiv.className =
+          "fixed top-4 right-4 bg-white p-4 rounded-lg shadow-lg border z-50";
+        detailsDiv.innerHTML = `
+          <div class="flex justify-between items-center mb-2">
+            <h4 class="font-bold text-legal-navy">${node.label}</h4>
+            <button onclick="this.parentElement.parentElement.remove()" class="text-gray-500 hover:text-gray-700">✕</button>
+          </div>
+          <p class="text-sm text-gray-600">Analysis details for this decision point would appear here.</p>
+        `;
+        document.body.appendChild(detailsDiv);
+
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+          if (detailsDiv.parentElement) {
+            detailsDiv.remove();
+          }
+        }, 5000);
+      }
+
+      // Initialize decision map when DOM is loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        // Add a small delay to ensure vis.js is fully loaded
+        setTimeout(createDecisionMap, 100);
+      });
+    </script>
+  </body>
+</html>
