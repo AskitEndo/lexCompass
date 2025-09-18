@@ -5,7 +5,7 @@ const cors = require("cors");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000; // Dynamic port for Render
 
 // Middleware
 app.use(cors()); // Allows requests from your frontend
@@ -140,6 +140,25 @@ The JSON format must be:
     console.error("Coaching Error:", error);
     res.status(500).json({ error: "Failed to get coaching suggestion." });
   }
+});
+
+// Health check endpoint for monitoring
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "healthy",
+    timestamp: new Date().toISOString(),
+    service: "LexCompass Backend",
+    version: "1.0.0",
+  });
+});
+
+// Root endpoint
+app.get("/", (req, res) => {
+  res.json({
+    message: "⚖️ LexCompass AI Legal Assistant Backend",
+    status: "running",
+    endpoints: ["/analyze", "/coach", "/health"],
+  });
 });
 
 app.listen(port, () => {
